@@ -35,43 +35,43 @@ export default function CredentialCard({ title, issuer, issuedDate, refId, statu
 
   return (
     <>
-      <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
         <div className="mb-6 flex items-start justify-between">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E4DEF2] text-[#7C3AED]">
             {icon}
           </span>
-          <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-600">
+          <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-600 font-[family-name:var(--font-display)]">
             {status}
           </span>
         </div>
 
-        <h3 className="mb-6 text-xl font-semibold tracking-tight text-slate-900">{title}</h3>
+        <h3 className="mb-6 text-xl font-semibold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">{title}</h3>
 
         <div className="space-y-4">
           <div>
-            <div className="text-sm font-medium text-slate-500">Issuer</div>
-            <div className="mt-1 text-sm font-medium text-slate-700">{issuer}</div>
+            <div className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">Issuer</div>
+            <div className="mt-1 text-sm font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{issuer}</div>
           </div>
           <div>
-            <div className="text-sm font-medium text-slate-500">Issued</div>
-            <div className="mt-1 text-sm font-medium text-slate-700">{issuedDate}</div>
+            <div className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">Issued</div>
+            <div className="mt-1 text-sm font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{issuedDate}</div>
           </div>
           <div>
-            <div className="text-sm font-medium text-slate-500">Ref ID</div>
-            <div className="mt-1 text-sm font-medium text-slate-700">{refId}</div>
+            <div className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">Ref ID</div>
+            <div className="mt-1 text-sm font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{refId}</div>
           </div>
         </div>
 
         <div className="mt-6 flex gap-3">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex-1 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800"
+            className="flex-1 rounded-[10px] bg-[#5B21B6] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4C1D95] font-[family-name:var(--font-display)]"
           >
             View
           </button>
           <button
             onClick={() => setIsQRModalOpen(true)}
-            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700"
+            className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#5B21B6] text-white shadow-sm transition-colors hover:bg-[#4C1D95]"
           >
             <QRCodeIcon />
           </button>

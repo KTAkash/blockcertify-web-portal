@@ -10,14 +10,14 @@ function InfoIcon() {
 
 export default function ExternalCredentialsCard() {
   return (
-    <div className="flex min-h-90 flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-6">
-      <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+    <div className="flex min-h-90 flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-[#E4DEF2] bg-[#E4DEF2]/50 p-6">
+      <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E4DEF2] text-[#7C3AED]">
         <InfoIcon />
       </span>
-      <h3 className="mb-2 text-sm font-bold uppercase tracking-[0.14em] text-slate-500">
+      <h3 className="mb-2 text-sm font-bold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
         View & Share Only
       </h3>
-      <p className="max-w-xs text-center text-sm leading-6 text-slate-400">
+      <p className="max-w-xs text-center text-sm leading-6 text-[#7A7290]">
         External credentials from verified institutions appear here automatically.
       </p>
     </div>

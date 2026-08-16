@@ -35,12 +35,12 @@ const institutions = [
 export default function ConsortiumViewSection() {
   return (
     <section className="h-full w-full">
-      <div className="flex min-h-[600px] flex-col items-center justify-center rounded-[2rem] bg-[#0f172a] p-10 shadow-2xl">
+      <div className="flex min-h-[600px] flex-col items-center justify-center rounded-[20px] bg-surface p-10 shadow-xl border border-surface-soft">
         <div className="mb-20 text-center">
-          <h2 className="text-[36px] font-black tracking-tight text-white sm:text-[42px]">
+          <h2 className="text-[36px] font-black tracking-tight text-foreground sm:text-[42px] font-[family-name:var(--font-display)]">
             CONSORTIUM NETWORK
           </h2>
-          <p className="mt-4 text-[15px] font-medium tracking-wide text-blue-200/70">
+          <p className="mt-4 text-[15px] font-medium tracking-wide text-muted">
             Multi-Institution Proof-of-Authority Federation
           </p>
         </div>
@@ -49,19 +49,19 @@ export default function ConsortiumViewSection() {
           {institutions.map((inst, i) => (
             <div
               key={i}
-              className="flex flex-col items-center justify-center rounded-3xl bg-[#1e293b]/60 px-6 py-12 shadow-lg transition-transform hover:scale-[1.02]"
+              className="flex flex-col items-center justify-center rounded-[20px] bg-[#F3F0FF] px-6 py-12 shadow-lg transition-transform hover:scale-[1.02] border border-surface-soft"
             >
-              <div className="mb-8 text-blue-500">
+              <div className="mb-8 text-primary">
                 <InstitutionIcon />
               </div>
               
-              <h3 className="mb-6 text-center text-[13px] font-black uppercase tracking-widest text-white">
+              <h3 className="mb-6 text-center text-[13px] font-black uppercase tracking-widest text-foreground font-[family-name:var(--font-display)]">
                 {inst.name}
               </h3>
               
               <div className="flex items-center gap-2">
                 <span className={`h-2.5 w-2.5 rounded-full ${inst.statusColor}`} />
-                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-muted">
                   {inst.status}
                 </span>
               </div>

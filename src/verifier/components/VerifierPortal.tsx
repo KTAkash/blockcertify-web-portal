@@ -121,18 +121,18 @@ export default function VerifierPortal() {
 
   return (
     <section className="space-y-6" id="verifier-portal">
-      <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Verifier portal</h2>
-          <p className="mt-1 text-sm text-slate-500">Cross-institution credential authentication service</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">Verifier portal</h2>
+          <p className="mt-1 text-sm text-[#7A7290]">Cross-institution credential authentication service</p>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* QR Code Section */}
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
           <div className="flex flex-col items-center">
-            <div className="relative mb-6 h-64 w-64 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
+            <div className="relative mb-6 h-64 w-64 overflow-hidden rounded-[20px] border border-[#E4DEF2] bg-[#E4DEF2]">
               {scanning ? (
                 <video
                   ref={videoRef}
@@ -141,36 +141,36 @@ export default function VerifierPortal() {
                   playsInline
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-slate-300">
+                <div className="flex h-full w-full items-center justify-center text-[#7C3AED]">
                   <QRScanIcon />
                 </div>
               )}
               <canvas ref={canvasRef} className="hidden" />
-              <div className="pointer-events-none absolute inset-4 rounded-2xl border-2 border-white/70" />
+              <div className="pointer-events-none absolute inset-4 rounded-[20px] border-2 border-white/70" />
             </div>
 
             <div className="text-center">
-              <div className="text-sm font-medium text-slate-600">Scan QR Code</div>
-              <div className="mt-1 text-xs text-slate-400">Position credential QR within frame</div>
+              <div className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">Scan QR Code</div>
+              <div className="mt-1 text-xs text-[#7A7290]">Position credential QR within frame</div>
             </div>
 
             <button
               type="button"
               disabled={!isCameraSupported}
               onClick={toggleScanner}
-              className="mt-5 rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(37,99,235,0.2)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+              className="mt-5 rounded-[10px] bg-[#5B21B6] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(91,33,182,0.2)] transition hover:bg-[#4C1D95] disabled:cursor-not-allowed disabled:bg-[#E4DEF2] font-[family-name:var(--font-display)]"
             >
               {scanning ? 'Stop Scanner' : 'Start Scanner'}
             </button>
 
             {scanResult ? (
-              <p className="mt-4 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                Scanned QR value: <span className="font-semibold text-slate-900">{scanResult}</span>
+              <p className="mt-4 rounded-[10px] bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-[family-name:var(--font-display)]">
+                Scanned QR value: <span className="font-semibold text-[#1D1330]">{scanResult}</span>
               </p>
             ) : null}
 
             {error ? (
-              <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <p className="mt-4 rounded-[10px] bg-rose-50 px-4 py-3 text-sm text-rose-700 font-[family-name:var(--font-display)]">
                 {error}
               </p>
             ) : null}
@@ -178,9 +178,9 @@ export default function VerifierPortal() {
         </div>
 
         {/* Manual Entry Section */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-[0_10px_30px_rgba(29,19,48,0.04)]">
           <div className="mb-6">
-            <div className="mb-4 text-sm font-medium text-slate-500">
+            <div className="mb-4 text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">
               Manual token entry
             </div>
             <input
@@ -188,20 +188,20 @@ export default function VerifierPortal() {
               value={token}
               onChange={(e) => setToken(e.target.value)}
               placeholder="TK-XXXXXX"
-              className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full rounded-[10px] border border-[#E4DEF2] bg-[#E4DEF2] px-5 py-4 text-sm font-medium text-[#1D1330] placeholder:text-[#7A7290] focus:border-[#7C3AED] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/20 font-[family-name:var(--font-display)]"
             />
           </div>
 
-          <button className="flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-4 text-sm font-bold text-white shadow-[0_14px_30px_rgba(37,99,235,0.18)] transition-colors hover:bg-blue-700">
+          <button className="flex w-full items-center justify-center gap-2 rounded-[10px] bg-[#5B21B6] px-5 py-4 text-sm font-bold text-white shadow-[0_14px_30px_rgba(91,33,182,0.18)] transition-colors hover:bg-[#4C1D95] font-[family-name:var(--font-display)]">
             <CheckIcon />
             Verify Credential
           </button>
 
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#7A7290] font-[family-name:var(--font-display)]">
             <span>Token</span>
-            <span className="text-slate-300">→</span>
+            <span className="text-[#E4DEF2]">→</span>
             <span>Blockchain</span>
-            <span className="text-slate-300">→</span>
+            <span className="text-[#E4DEF2]">→</span>
             <span>Result</span>
           </div>
         </div>

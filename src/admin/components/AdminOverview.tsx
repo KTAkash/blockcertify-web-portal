@@ -6,12 +6,12 @@ type StatCardProps = {
 
 function StatCard({ label, value, icon }: StatCardProps) {
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
       <div className="mb-6 flex items-start justify-between">
-        <div className="text-sm font-medium text-slate-500">{label}</div>
-        <div className="rounded-xl bg-slate-50 p-2 text-slate-500">{icon}</div>
+        <div className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">{label}</div>
+        <div className="rounded-xl bg-[#E4DEF2] p-2 text-[#7C3AED]">{icon}</div>
       </div>
-      <div className="text-3xl font-semibold text-slate-900">{value}</div>
+      <div className="text-3xl font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">{value}</div>
     </div>
   );
 }
@@ -83,68 +83,68 @@ export default function AdminOverview() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
           <div className="mb-6 flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E4DEF2] text-[#7C3AED]">
               <ShieldIcon />
             </span>
-            <h3 className="text-lg font-semibold text-slate-900">Credential keys</h3>
+            <h3 className="text-lg font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">Credential keys</h3>
           </div>
 
-          <div className="rounded-3xl bg-slate-50 px-4 py-4">
+          <div className="rounded-3xl bg-[#E4DEF2] px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-sm font-medium text-slate-500">PUB_KEY_ED25519_2024</div>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500">
+                <div className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">PUB_KEY_ED25519_2024</div>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[#7A7290]">
                   Cryptographic material used for signing multi-institution credentials across the consortium.
                 </p>
               </div>
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-600">
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-600 font-[family-name:var(--font-display)]">
                 Active
               </span>
             </div>
           </div>
 
-          <button className="mt-6 w-full rounded-2xl bg-slate-950 px-5 py-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800">
+          <button className="mt-6 w-full rounded-[10px] bg-[#5B21B6] px-5 py-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4C1D95] font-[family-name:var(--font-display)]">
             Rotate authority keys
           </button>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+        <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-[0_10px_30px_rgba(29,19,48,0.04)]">
           <div className="mb-6 flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#E4DEF2] text-[#7C3AED]">
               <ArrowsIcon />
             </span>
-            <h3 className="text-lg font-semibold text-slate-900">Node connectivity</h3>
+            <h3 className="text-lg font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">Node connectivity</h3>
           </div>
 
           <div className="space-y-6">
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-4">
-              <span className="text-sm font-medium text-slate-500">Endpoint</span>
-              <span className="text-sm font-medium text-slate-700">peer0.tech-uni.fabric.net</span>
+            <div className="flex items-center justify-between gap-4 border-b border-[#E4DEF2] pb-4">
+              <span className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">Endpoint</span>
+              <span className="text-sm font-medium text-[#1D1330] font-[family-name:var(--font-display)]">peer0.tech-uni.fabric.net</span>
             </div>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-4">
-              <span className="text-sm font-medium text-slate-500">Status</span>
-              <span className="text-sm font-semibold text-emerald-600">Consensus reached</span>
+            <div className="flex items-center justify-between gap-4 border-b border-[#E4DEF2] pb-4">
+              <span className="text-sm font-medium text-[#7A7290] font-[family-name:var(--font-display)]">Status</span>
+              <span className="text-sm font-semibold text-emerald-600 font-[family-name:var(--font-display)]">Consensus reached</span>
             </div>
 
             <div>
-              <div className="mb-2 flex items-center justify-between text-xs font-medium text-slate-500">
+              <div className="mb-2 flex items-center justify-between text-xs font-medium text-[#7A7290] font-[family-name:var(--font-display)]">
                 <span>Connection strength</span>
                 <span>75%</span>
               </div>
-              <div className="h-2 rounded-full bg-slate-100">
-                <div className="h-2 w-[75%] rounded-full bg-blue-500" />
+              <div className="h-2 rounded-full bg-[#E4DEF2]">
+                <div className="h-2 w-[75%] rounded-full bg-[#5B21B6]" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <section className="rounded-3xl border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.04)]" id="credentials">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
-          <h3 className="text-lg font-bold tracking-tight text-slate-900">Issued Certificates</h3>
-          <button className="text-sm font-bold uppercase tracking-[0.14em] text-blue-600 transition-colors hover:text-blue-700">
+      <section className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] shadow-[0_10px_30px_rgba(29,19,48,0.04)]" id="credentials">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E4DEF2] px-6 py-5">
+          <h3 className="text-lg font-bold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">Issued Certificates</h3>
+          <button className="text-sm font-bold uppercase tracking-[0.14em] text-[#7C3AED] transition-colors hover:text-[#5B21B6] font-[family-name:var(--font-display)]">
             Download Registry
           </button>
         </div>
@@ -152,7 +152,7 @@ export default function AdminOverview() {
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/70 text-left text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+              <tr className="border-b border-[#E4DEF2] bg-[#E4DEF2]/70 text-left text-xs font-bold uppercase tracking-[0.14em] text-[#7A7290]">
                 <th className="px-6 py-4">Student</th>
                 <th className="px-6 py-4">Credential</th>
                 <th className="px-6 py-4">Issue Date</th>
@@ -162,20 +162,20 @@ export default function AdminOverview() {
             </thead>
             <tbody>
               {certificates.map((certificate) => (
-                <tr key={certificate.id} className="border-b border-slate-50 last:border-b-0">
+                <tr key={certificate.id} className="border-b border-[#E4DEF2] last:border-b-0">
                   <td className="px-6 py-5">
-                    <div className="font-semibold text-slate-900">{certificate.student}</div>
-                    <div className="text-sm text-slate-400">{certificate.id}</div>
+                    <div className="font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">{certificate.student}</div>
+                    <div className="text-sm text-[#7A7290]">{certificate.id}</div>
                   </td>
-                  <td className="px-6 py-5 text-sm text-slate-600">{certificate.credential}</td>
-                  <td className="px-6 py-5 text-sm text-slate-600">{certificate.issueDate}</td>
+                  <td className="px-6 py-5 text-sm text-[#1D1330]">{certificate.credential}</td>
+                  <td className="px-6 py-5 text-sm text-[#1D1330]">{certificate.issueDate}</td>
                   <td className="px-6 py-5">
-                    <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-emerald-600">
+                    <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-emerald-600 font-[family-name:var(--font-display)]">
                       {certificate.status}
                     </span>
                   </td>
                   <td className="px-6 py-5 text-right">
-                    <button className="rounded-full border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-600 transition-colors hover:bg-rose-50">
+                    <button className="rounded-full border border-rose-200 px-4 py-2 text-sm font-semibold text-rose-600 transition-colors hover:bg-rose-50 font-[family-name:var(--font-display)]">
                       Revoke
                     </button>
                   </td>

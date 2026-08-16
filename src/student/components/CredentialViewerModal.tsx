@@ -51,22 +51,22 @@ export default function CredentialViewerModal({ isOpen, onClose, credential }: C
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="flex h-full max-h-175 w-full max-w-5xl overflow-hidden rounded-3xl shadow-2xl">
         {/* Left Section - Dark Background */}
-        <div className="flex w-full flex-col justify-between bg-slate-950 p-8 lg:w-2/5">
+        <div className="flex w-full flex-col justify-between bg-[#120B24] p-8 lg:w-2/5">
           <div>
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#7C3AED]/20 text-[#9F75F2]">
               <ShieldCheckIcon />
             </div>
-            <h2 className="mb-4 text-2xl font-bold tracking-tight text-white">
+            <h2 className="mb-4 text-2xl font-bold tracking-tight text-white font-[family-name:var(--font-display)]">
               Immutable Cryptographic Record
             </h2>
-            <p className="text-sm leading-relaxed text-slate-400">
+            <p className="text-sm leading-relaxed text-[#D9CCF7]">
               This document is secured using a hybrid storage model. The certificate binary is stored on IPFS, while the hash and audit trail are anchored to Hyperledger Fabric.
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="mt-8 flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-800 px-6 py-4 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-2xl border border-white/30 bg-transparent px-6 py-4 text-sm font-semibold text-white transition-colors hover:bg-white/10 font-[family-name:var(--font-display)]"
           >
             <CloseIcon />
             Close Viewer
@@ -74,15 +74,15 @@ export default function CredentialViewerModal({ isOpen, onClose, credential }: C
         </div>
 
         {/* Right Section - White Background */}
-        <div className="flex w-full flex-col bg-white lg:w-3/5">
-          {/* Blue Header Bar */}
-          <div className="flex items-center gap-3 bg-blue-600 px-8 py-5">
+        <div className="flex w-full flex-col bg-[#FAF9FC] lg:w-3/5">
+          {/* Purple Header Bar */}
+          <div className="flex items-center gap-3 bg-[#5B21B6] px-8 py-5">
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 text-white">
               <BuildingGradCapIcon />
             </span>
             <div>
-              <h3 className="text-lg font-bold text-white">Official Certificate of Graduation</h3>
-              <p className="text-sm text-blue-100">{credential.issuer}</p>
+              <h3 className="text-lg font-bold text-white font-[family-name:var(--font-display)]">Official Certificate of Graduation</h3>
+              <p className="text-sm text-[#D9CCF7]">{credential.issuer}</p>
             </div>
           </div>
 
@@ -90,50 +90,50 @@ export default function CredentialViewerModal({ isOpen, onClose, credential }: C
           <div className="flex-1 overflow-y-auto p-8">
             <div className="space-y-8">
               <div className="text-center">
-                <div className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <div className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
                   This is to certify that
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+                <h2 className="text-3xl font-bold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">
                   {credential.studentName}
                 </h2>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-                <div className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+              <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-6">
+                <div className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
                   Degree Awarded
                 </div>
-                <div className="text-xl font-bold text-slate-900">{credential.title}</div>
+                <div className="text-xl font-bold text-[#1D1330] font-[family-name:var(--font-display)]">{credential.title}</div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
                     Issuing Institution
                   </div>
-                  <div className="font-medium text-slate-900">{credential.issuer}</div>
+                  <div className="font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{credential.issuer}</div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
                     Date of Issue
                   </div>
-                  <div className="font-medium text-slate-900">{credential.issuedDate}</div>
+                  <div className="font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{credential.issuedDate}</div>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+              <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
                   Reference ID
                 </div>
-                <div className="font-mono text-sm font-medium text-slate-900">{credential.refId}</div>
+                <div className="font-mono text-sm font-medium text-[#1D1330]">{credential.refId}</div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+              <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
                   Blockchain Verification
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  <span className="text-sm font-medium text-slate-700">Verified on Hyperledger Fabric</span>
+                  <span className="text-sm font-medium text-[#1D1330] font-[family-name:var(--font-display)]">Verified on Hyperledger Fabric</span>
                 </div>
               </div>
             </div>

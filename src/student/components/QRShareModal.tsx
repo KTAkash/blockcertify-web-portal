@@ -70,18 +70,18 @@ export default function QRShareModal({ isOpen, onClose, accessToken }: QRShareMo
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-3xl bg-white shadow-2xl">
+      <div className="w-full max-w-md rounded-3xl bg-[#FAF9FC] shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[#E4DEF2] px-6 py-4">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E4DEF2] text-[#7C3AED]">
               <ShareIcon />
             </span>
-            <h2 className="text-lg font-bold tracking-tight text-slate-900">Selective Disclosure</h2>
+            <h2 className="text-lg font-bold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">Selective Disclosure</h2>
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#7A7290] transition-colors hover:bg-[#E4DEF2] hover:text-[#1D1330]"
           >
             <CloseIcon />
           </button>
@@ -90,26 +90,24 @@ export default function QRShareModal({ isOpen, onClose, accessToken }: QRShareMo
         {/* Content */}
         <div className="flex flex-col items-center p-8">
           {/* QR Code */}
-          <div className="mb-6 rounded-2xl border-4 border-amber-200 bg-white p-4">
-            <div className="text-slate-900">
-              <QRCodePlaceholder />
-            </div>
+          <div className="mb-6 rounded-2xl border-4 border-[#E4DEF2] bg-white p-4 text-[#1D1330]">
+            <QRCodePlaceholder />
           </div>
 
           {/* Access Token Label */}
-          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
             Access Token
           </div>
 
           {/* Access Token */}
-          <div className="mb-6 rounded-2xl bg-slate-100 px-6 py-3">
-            <div className="text-2xl font-black tracking-tight text-slate-900">
+          <div className="mb-6 rounded-2xl bg-[#E4DEF2] px-6 py-3">
+            <div className="text-2xl font-black tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">
               {accessToken}
             </div>
           </div>
 
           {/* Description */}
-          <div className="text-center text-sm text-slate-500">
+          <div className="text-center text-sm text-[#7A7290]">
             Contains Access Token + CID (Selective Disclosure)
           </div>
         </div>

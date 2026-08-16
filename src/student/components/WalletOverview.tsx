@@ -13,15 +13,15 @@ function ShieldIcon() {
 export default function WalletOverview() {
   return (
     <section className="space-y-6" id="overview">
-      <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Digital wallet</h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <h2 className="text-2xl font-bold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">Digital wallet</h2>
+            <p className="mt-1 text-sm text-[#7A7290]">
               Multi-institution credential vault
             </p>
           </div>
-          <button className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700">
+          <button className="rounded-full bg-[#5B21B6] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4C1D95] font-[family-name:var(--font-display)]">
             SSI protected
           </button>
         </div>
