@@ -219,13 +219,17 @@ export const apiClient = {
     const contentType = response.headers.get('content-type') || '';
 
     if (contentType.includes('application/json')) {
-      return response.json();
+      const data = await response.json();
+      console.log('Upload JSON response:', data);
+      return data;
     }
 
-    return response.text();
+    const text = await response.text();
+    console.log('Upload text response:', text);
+    return text;
   },
 
-  async previewFile(cid: string): Promise<Blob> {
+  async previewFile(cid: string, hash: string): Promise<Blob> {
     const session = authStorage.getSession();
     const headers = new Headers();
 
@@ -233,7 +237,7 @@ export const apiClient = {
       headers.set('Authorization', `Bearer ${session.token}`);
     }
 
-    const response = await fetch(`/api/files/${cid}/preview`, {
+    const response = await fetch(`/api/files/${cid}/preview?hash=${hash}`, {
       method: 'GET',
       headers,
     });
@@ -250,6 +254,31 @@ export const apiClient = {
     }
 
     return response.blob();
+  },
+
+  async deleteFile(cid: string): Promise<void> {
+    const session = authStorage.getSession();
+    const headers = new Headers();
+
+    if (session) {
+      headers.set('Authorization', `Bearer ${session.token}`);
+    }
+
+    const response = await fetch(`/api/files/${cid}`, {
+      method: 'DELETE',
+      headers,
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'File deletion failed';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        // ignore
+      }
+      throw new Error(errorMessage);
+    }
   },
 
   async getStudents(): Promise<any[]> {
@@ -397,10 +426,38 @@ export const apiClient = {
     return response.json();
   },
 
+  async getCertificatesByStudentId(studentId: string): Promise<any[]> {
+    const session = authStorage.getSession();
+    const headers = new Headers();
+
+    if (session) {
+      headers.set('Authorization', `Bearer ${session.token}`);
+    }
+
+    headers.set('Content-Type', 'application/json');
+
+    const response = await fetch(`/api/certificates/student/${studentId}`, {
+      method: 'GET',
+      headers,
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to fetch certificates for student';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        // ignore
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  },
+
   async issueCertificate(certificateData: {
-    certificateId: string;
     studentId: string;
-    CertificateTitle: string;
+    certificateTitle: string;
     cid: string;
     hash: string;
     status: string;
@@ -434,10 +491,46 @@ export const apiClient = {
     return response.json();
   },
 
+  async commitToBlockchain(certificateData: {
+    certificateId: string;
+    studentId: string;
+    cid: string;
+    hash: string;
+    status: string;
+  }): Promise<any> {
+    const session = authStorage.getSession();
+    const headers = new Headers();
+
+    if (session) {
+      headers.set('Authorization', `Bearer ${session.token}`);
+    }
+
+    headers.set('Content-Type', 'application/json');
+
+    const response = await fetch('/api/certificates/blockchain', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(certificateData),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to commit certificate to blockchain';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        // ignore
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  },
+
   async updateCertificate(id: string, certificateData: {
     certificateId: string;
     studentId: string;
-    CertificateTitle: string;
+    certificateTitle: string;
     cid: string;
     hash: string;
     status: string;

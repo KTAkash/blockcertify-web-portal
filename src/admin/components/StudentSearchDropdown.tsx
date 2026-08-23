@@ -14,9 +14,10 @@ type StudentSearchDropdownProps = {
   value: string;
   onChange: (studentId: string) => void;
   placeholder?: string;
+  disabled?: boolean;
 };
 
-export default function StudentSearchDropdown({ value, onChange, placeholder = 'Select student...' }: StudentSearchDropdownProps) {
+export default function StudentSearchDropdown({ value, onChange, placeholder = 'Select student...', disabled = false }: StudentSearchDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState<Student[]>([]);
@@ -76,7 +77,8 @@ export default function StudentSearchDropdown({ value, onChange, placeholder = '
         }}
         onFocus={() => setIsOpen(true)}
         placeholder={placeholder}
-        className="w-full rounded-[10px] border border-[#E4DEF2] bg-[#FAF9FC] px-5 py-4 text-lg text-[#1D1330] outline-none transition-colors focus:border-[#7C3AED] font-[family-name:var(--font-display)]"
+        disabled={disabled}
+        className="w-full rounded-[10px] border border-[#E4DEF2] bg-[#FAF9FC] px-5 py-4 text-lg text-[#1D1330] outline-none transition-colors focus:border-[#7C3AED] disabled:opacity-50 disabled:cursor-not-allowed font-[family-name:var(--font-display)]"
       />
 
       {isOpen && (

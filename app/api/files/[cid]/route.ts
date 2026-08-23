@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(
+export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ cid: string }> }
 ) {
   try {
     const { cid } = await params;
-    const { searchParams } = new URL(request.url);
-    const hash = searchParams.get('hash');
-
+    
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'}/api/files/${cid}`;
+    
     const headers = new Headers();
     request.headers.forEach((value, key) => {
       const lowerKey = key.toLowerCase();
@@ -17,10 +17,8 @@ export async function GET(
       }
     });
 
-    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'}/api/files/${cid}/preview`;
-
     const backendResponse = await fetch(backendUrl, {
-      method: 'GET',
+      method: 'DELETE',
       headers,
     });
 
@@ -29,22 +27,9 @@ export async function GET(
       return NextResponse.json(errorData, { status: backendResponse.status });
     }
 
-    const contentType = backendResponse.headers.get('content-type') || '';
-
-    if (contentType.includes('application/json')) {
-      const data = await backendResponse.json();
-      return NextResponse.json(data, { status: backendResponse.status });
-    }
-
-    const blob = await backendResponse.blob();
-    return new NextResponse(blob, {
-      status: backendResponse.status,
-      headers: {
-        'content-type': contentType || 'application/octet-stream',
-      },
-    });
+    return NextResponse.json({ message: 'File deleted successfully' }, { status: 200 });
   } catch (error) {
-    console.error('File preview API route error:', error);
+    console.error('File DELETE API route error:', error);
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

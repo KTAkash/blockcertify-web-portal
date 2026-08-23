@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/src/apiHelper/api';
 import AddStudentForm from './AddStudentForm';
+import EditStudentModal from './EditStudentModal';
+import ViewStudentModal from './ViewStudentModal';
+import ConfirmationModal from './ConfirmationModal';
 
 type Student = {
   id: string;
@@ -42,6 +45,9 @@ export default function StudentListing() {
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState<Student[]>([]);
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -86,6 +92,20 @@ export default function StudentListing() {
     } catch (error) {
       console.error('Failed to delete student:', error);
     }
+  };
+
+  const handleEditStudent = (student: Student) => {
+    setSelectedStudent(student);
+    setIsEditModalOpen(true);
+  };
+
+  const handleViewStudent = (studentId: string) => {
+    setSelectedStudent(students.find(s => s.id === studentId) || null);
+    setIsViewModalOpen(true);
+  };
+
+  const handleUpdateStudent = () => {
+    loadStudents();
   };
 
   return (
@@ -143,10 +163,16 @@ export default function StudentListing() {
                   <td className="px-6 py-5 text-sm text-[#7A7290]">{student.email}</td>
                   <td className="px-6 py-5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]">
+                      <button 
+                        onClick={() => handleViewStudent(student.id)}
+                        className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]"
+                      >
                         <ViewIcon />
                       </button>
-                      <button className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]">
+                      <button 
+                        onClick={() => handleEditStudent(student)}
+                        className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]"
+                      >
                         <EditIcon />
                       </button>
                       <button 
@@ -169,6 +195,27 @@ export default function StudentListing() {
         <AddStudentForm 
           onClose={() => setIsAddFormOpen(false)}
           onAddStudent={handleAddStudent}
+        />
+      )}
+
+      {isEditModalOpen && selectedStudent && (
+        <EditStudentModal
+          student={selectedStudent}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedStudent(null);
+          }}
+          onUpdate={handleUpdateStudent}
+        />
+      )}
+
+      {isViewModalOpen && selectedStudent && (
+        <ViewStudentModal
+          studentId={selectedStudent.id}
+          onClose={() => {
+            setIsViewModalOpen(false);
+            setSelectedStudent(null);
+          }}
         />
       )}
     </section>

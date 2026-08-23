@@ -19,9 +19,10 @@ type DegreeTitleDropdownProps = {
   value: string;
   onChange: (title: string) => void;
   placeholder?: string;
+  disabled?: boolean;
 };
 
-export default function DegreeTitleDropdown({ value, onChange, placeholder = 'Select degree title...' }: DegreeTitleDropdownProps) {
+export default function DegreeTitleDropdown({ value, onChange, placeholder = 'Select degree title...', disabled = false }: DegreeTitleDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -60,7 +61,8 @@ export default function DegreeTitleDropdown({ value, onChange, placeholder = 'Se
         }}
         onFocus={() => setIsOpen(true)}
         placeholder={placeholder}
-        className="w-full rounded-[10px] border border-[#E4DEF2] bg-[#FAF9FC] px-5 py-4 text-lg text-[#1D1330] outline-none transition-colors focus:border-[#7C3AED] font-[family-name:var(--font-display)]"
+        disabled={disabled}
+        className="w-full rounded-[10px] border border-[#E4DEF2] bg-[#FAF9FC] px-5 py-4 text-lg text-[#1D1330] outline-none transition-colors focus:border-[#7C3AED] disabled:opacity-50 disabled:cursor-not-allowed font-[family-name:var(--font-display)]"
       />
 
       {isOpen && (
