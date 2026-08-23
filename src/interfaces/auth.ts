@@ -34,3 +34,13 @@ export interface RegisterUniversityRequest {
   peerTlsCertPem: string;
   peerHostnameOverride: string;
 }
+
+export interface StudentSignupRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  indexNo: string;
+  mobileNo: string;
+  gender: string;
+}

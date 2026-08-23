@@ -1,5 +1,5 @@
 import { API_CONFIG } from '../config/config';
-import { LoginRequest, LoginResponse, AuthSession, University, RegisterUniversityRequest } from '../interfaces/auth';
+import { LoginRequest, LoginResponse, AuthSession, University, RegisterUniversityRequest, StudentSignupRequest } from '../interfaces/auth';
 
 const TOKEN_KEY = 'blockcertify-token';
 
@@ -42,6 +42,29 @@ export const apiClient = {
 
     if (!response.ok) {
       let errorMessage = 'Login failed';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        // ignore
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  },
+
+  async studentSignup(request: StudentSignupRequest): Promise<any> {
+    const response = await fetch(API_CONFIG.AUTH_STUDENT_SIGNUP, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'Student signup failed';
       try {
         const errorData = await response.json();
         errorMessage = errorData.message || errorData.error || errorMessage;
