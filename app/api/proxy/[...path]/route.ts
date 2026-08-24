@@ -27,7 +27,7 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ p
 
 async function handleProxyRequest(request: NextRequest, pathSegments: string[]) {
   try {
-    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'}/${pathSegments.join('/')}`;
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'}/${pathSegments.join('/')}${request.nextUrl.search}`;
     
     const requestHeaders = new Headers(request.headers);
     const headers = new Headers();

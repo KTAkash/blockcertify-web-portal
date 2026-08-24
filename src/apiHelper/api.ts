@@ -1,5 +1,5 @@
 import { API_CONFIG } from '../config/config';
-import { LoginRequest, LoginResponse, AuthSession, University, RegisterUniversityRequest, StudentSignupRequest } from '../interfaces/auth';
+import { LoginRequest, LoginResponse, AuthSession, University, RegisterUniversityRequest, StudentProfile, StudentSignupRequest, StudentCertificatesResponse } from '../interfaces/auth';
 
 const TOKEN_KEY = 'blockcertify-token';
 
@@ -75,6 +75,16 @@ export const apiClient = {
     }
 
     return response.json();
+  },
+
+  async getStudentProfile(): Promise<StudentProfile> {
+    return this.fetch<StudentProfile>('/api/auth/student/profile');
+  },
+
+  async getStudentCertificates(indexNo: string): Promise<StudentCertificatesResponse> {
+    return this.fetch<StudentCertificatesResponse>(
+      `/api/auth/student/details-by-index?indexNo=${encodeURIComponent(indexNo)}`
+    );
   },
 
   async getUniversities(): Promise<University[]> {

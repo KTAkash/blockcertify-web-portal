@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import CredentialViewerModal from './CredentialViewerModal';
 import QRShareModal from './QRShareModal';
+import { apiClient } from '@/src/apiHelper/api';
 
 type CredentialCardProps = {
   title: string;
@@ -12,7 +13,8 @@ type CredentialCardProps = {
   status: string;
   icon: React.ReactNode;
   studentName?: string;
-  accessToken?: string;
+  cid: string;
+  hash: string;
 };
 
 function QRCodeIcon() {
@@ -29,9 +31,43 @@ function QRCodeIcon() {
   );
 }
 
-export default function CredentialCard({ title, issuer, issuedDate, refId, status, icon, studentName = 'Alex Johnson', accessToken = 'TK-VWFV9K' }: CredentialCardProps) {
+export default function CredentialCard({ title, issuer, issuedDate, refId, status, icon, studentName = 'Alex Johnson', cid, hash }: CredentialCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewMimeType, setPreviewMimeType] = useState<string | null>(null);
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  const handlePreview = async () => {
+    try {
+      setIsPreviewLoading(true);
+      setPreviewError(null);
+      const previewBlob = await apiClient.previewFile(cid, hash);
+      const objectUrl = URL.createObjectURL(previewBlob);
+
+      setPreviewUrl((currentUrl) => {
+        if (currentUrl) URL.revokeObjectURL(currentUrl);
+        return objectUrl;
+      });
+      setPreviewMimeType(previewBlob.type);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Failed to preview certificate:', error);
+      setPreviewError('Unable to load this certificate preview.');
+    } finally {
+      setIsPreviewLoading(false);
+    }
+  };
+
+  const handleClosePreview = () => {
+    setIsModalOpen(false);
+    setPreviewUrl((currentUrl) => {
+      if (currentUrl) URL.revokeObjectURL(currentUrl);
+      return null;
+    });
+    setPreviewMimeType(null);
+  };
 
   return (
     <>
@@ -64,10 +100,12 @@ export default function CredentialCard({ title, issuer, issuedDate, refId, statu
 
         <div className="mt-6 flex gap-3">
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex-1 rounded-[10px] bg-[#5B21B6] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4C1D95] font-[family-name:var(--font-display)]"
+            type="button"
+            onClick={handlePreview}
+            disabled={isPreviewLoading}
+            className="flex-1 rounded-[10px] bg-[#5B21B6] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4C1D95] disabled:cursor-not-allowed disabled:opacity-60 font-[family-name:var(--font-display)]"
           >
-            View
+            {isPreviewLoading ? 'Loading...' : 'View'}
           </button>
           <button
             onClick={() => setIsQRModalOpen(true)}
@@ -76,11 +114,14 @@ export default function CredentialCard({ title, issuer, issuedDate, refId, statu
             <QRCodeIcon />
           </button>
         </div>
+        {previewError && <p className="mt-3 text-sm text-rose-600">{previewError}</p>}
       </div>
 
       <CredentialViewerModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleClosePreview}
+        previewUrl={previewUrl}
+        previewMimeType={previewMimeType}
         credential={{
           title,
           issuer,
@@ -93,7 +134,7 @@ export default function CredentialCard({ title, issuer, issuedDate, refId, statu
       <QRShareModal
         isOpen={isQRModalOpen}
         onClose={() => setIsQRModalOpen(false)}
-        accessToken={accessToken}
+        cid={cid}
       />
     </>
   );

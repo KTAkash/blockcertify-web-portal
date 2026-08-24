@@ -1,11 +1,13 @@
 "use client";
 
-import React from 'react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { toDataURL } from 'qrcode';
 
 type QRShareModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  accessToken: string;
+  cid: string;
 };
 
 function ShareIcon() {
@@ -29,43 +31,71 @@ function CloseIcon() {
   );
 }
 
-function QRCodePlaceholder() {
+function DownloadIcon() {
   return (
-    <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="10" y="10" width="50" height="50" fill="currentColor" />
-      <rect x="140" y="10" width="50" height="50" fill="currentColor" />
-      <rect x="10" y="140" width="50" height="50" fill="currentColor" />
-      <rect x="70" y="10" width="20" height="20" fill="currentColor" />
-      <rect x="110" y="10" width="20" height="20" fill="currentColor" />
-      <rect x="70" y="40" width="20" height="20" fill="currentColor" />
-      <rect x="110" y="40" width="20" height="20" fill="currentColor" />
-      <rect x="70" y="70" width="20" height="20" fill="currentColor" />
-      <rect x="110" y="70" width="20" height="20" fill="currentColor" />
-      <rect x="70" y="100" width="20" height="20" fill="currentColor" />
-      <rect x="110" y="100" width="20" height="20" fill="currentColor" />
-      <rect x="70" y="130" width="20" height="20" fill="currentColor" />
-      <rect x="110" y="130" width="20" height="20" fill="currentColor" />
-      <rect x="70" y="160" width="20" height="20" fill="currentColor" />
-      <rect x="110" y="160" width="20" height="20" fill="currentColor" />
-      <rect x="140" y="70" width="20" height="20" fill="currentColor" />
-      <rect x="170" y="70" width="20" height="20" fill="currentColor" />
-      <rect x="140" y="100" width="20" height="20" fill="currentColor" />
-      <rect x="170" y="100" width="20" height="20" fill="currentColor" />
-      <rect x="140" y="130" width="20" height="20" fill="currentColor" />
-      <rect x="170" y="130" width="20" height="20" fill="currentColor" />
-      <rect x="140" y="160" width="20" height="20" fill="currentColor" />
-      <rect x="170" y="160" width="20" height="20" fill="currentColor" />
-      <rect x="10" y="70" width="20" height="20" fill="currentColor" />
-      <rect x="40" y="70" width="20" height="20" fill="currentColor" />
-      <rect x="10" y="100" width="20" height="20" fill="currentColor" />
-      <rect x="40" y="100" width="20" height="20" fill="currentColor" />
-      <rect x="10" y="130" width="20" height="20" fill="currentColor" />
-      <rect x="40" y="130" width="20" height="20" fill="currentColor" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 3V15M12 15L7 10M12 15L17 10M5 21H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-export default function QRShareModal({ isOpen, onClose, accessToken }: QRShareModalProps) {
+export default function QRShareModal({ isOpen, onClose, cid }: QRShareModalProps) {
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [qrError, setQrError] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let isCurrent = true;
+
+    toDataURL(cid, { width: 200, margin: 1, errorCorrectionLevel: 'M' })
+      .then((url) => {
+        if (isCurrent) setQrCodeUrl(url);
+      })
+      .catch((error) => {
+        console.error('Failed to generate certificate QR code:', error);
+        if (isCurrent) setQrError(true);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [cid, isOpen]);
+
+  const handleDownload = () => {
+    if (!qrCodeUrl) return;
+
+    const link = document.createElement('a');
+    link.href = qrCodeUrl;
+    link.download = 'certificate-cid-qr.png';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
+  const handleShare = async () => {
+    if (!qrCodeUrl || !navigator.share) return;
+
+    try {
+      const imageBlob = await (await fetch(qrCodeUrl)).blob();
+      const imageFile = new File([imageBlob], 'certificate-cid-qr.png', { type: 'image/png' });
+      const shareData = {
+        title: 'Certificate QR code',
+        text: `Certificate CID: ${cid}`,
+        files: [imageFile],
+      };
+
+      if (navigator.canShare?.(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.share({ title: shareData.title, text: shareData.text });
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      console.error('Failed to share certificate QR code:', error);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -91,24 +121,51 @@ export default function QRShareModal({ isOpen, onClose, accessToken }: QRShareMo
         <div className="flex flex-col items-center p-8">
           {/* QR Code */}
           <div className="mb-6 rounded-2xl border-4 border-[#E4DEF2] bg-white p-4 text-[#1D1330]">
-            <QRCodePlaceholder />
+            {qrCodeUrl ? (
+              <Image src={qrCodeUrl} alt="QR code for this certificate CID" width={200} height={200} unoptimized />
+            ) : (
+              <div className="flex h-[200px] w-[200px] items-center justify-center text-sm text-[#7A7290]">
+                {qrError ? 'Unable to generate QR code' : 'Generating QR code...'}
+              </div>
+            )}
           </div>
 
-          {/* Access Token Label */}
+          {/* Certificate CID Label */}
           <div className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-            Access Token
+            Certificate CID
           </div>
 
-          {/* Access Token */}
-          <div className="mb-6 rounded-2xl bg-[#E4DEF2] px-6 py-3">
-            <div className="text-2xl font-black tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">
-              {accessToken}
+          {/* Certificate CID */}
+          <div className="mb-6 w-full rounded-2xl bg-[#E4DEF2] px-6 py-3">
+            <div className="break-all text-center text-sm font-bold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">
+              {cid}
             </div>
           </div>
 
+          <div className="grid w-full grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={handleDownload}
+              disabled={!qrCodeUrl}
+              className="flex items-center justify-center gap-2 rounded-xl border border-[#5B21B6] px-4 py-3 text-sm font-semibold text-[#5B21B6] transition-colors hover:bg-[#EDE9FE] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <DownloadIcon />
+              Download
+            </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              disabled={!qrCodeUrl || typeof navigator === 'undefined' || !navigator.share}
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#5B21B6] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#4C1D95] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <ShareIcon />
+              Share
+            </button>
+          </div>
+
           {/* Description */}
-          <div className="text-center text-sm text-[#7A7290]">
-            Contains Access Token + CID (Selective Disclosure)
+          <div className="mt-6 text-center text-sm text-[#7A7290]">
+            Scan to retrieve this certificate&apos;s CID.
           </div>
         </div>
       </div>

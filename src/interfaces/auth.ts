@@ -44,3 +44,30 @@ export interface StudentSignupRequest {
   mobileNo: string;
   gender: string;
 }
+
+export interface StudentProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  indexNo: string;
+  mobileNo: string;
+  gender: string;
+  role: string;
+  createdAt: string;
+}
+
+export interface StudentCertificate {
+  certificateId: string;
+  certificateTitle: string;
+  cid: string;
+  hash: string;
+  issuedBy: string;
+  status: string;
+  issuedAt: string | null;
+}
+
+export interface StudentCertificatesResponse {
+  indexNo: string;
+  certificates: StudentCertificate[];
+}

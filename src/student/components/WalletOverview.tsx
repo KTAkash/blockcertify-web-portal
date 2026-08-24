@@ -1,5 +1,10 @@
+"use client";
+
+import { useEffect, useState } from 'react';
 import CredentialCard from './CredentialCard';
 import ExternalCredentialsCard from './ExternalCredentialsCard';
+import { apiClient } from '@/src/apiHelper/api';
+import type { StudentCertificate, StudentProfile } from '@/src/interfaces/auth';
 
 function ShieldIcon() {
   return (
@@ -11,6 +16,30 @@ function ShieldIcon() {
 }
 
 export default function WalletOverview() {
+  const [certificates, setCertificates] = useState<StudentCertificate[]>([]);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadWallet = async () => {
+      try {
+        const studentProfile = await apiClient.getStudentProfile();
+        setProfile(studentProfile);
+
+        const details = await apiClient.getStudentCertificates(studentProfile.indexNo);
+        setCertificates(details.certificates ?? []);
+      } catch (loadError) {
+        console.error('Failed to load wallet certificates:', loadError);
+        setError('Unable to load your certificates. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadWallet();
+  }, []);
+
   return (
     <section className="space-y-6" id="overview">
       <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-sm">
@@ -27,17 +56,47 @@ export default function WalletOverview() {
         </div>
       </div>
 
+      {isLoading ? (
+        <div className="grid gap-6 lg:grid-cols-2">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <div key={index} className="h-96 animate-pulse rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC]" />
+          ))}
+        </div>
+      ) : error ? (
+        <div className="rounded-[20px] border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{error}</div>
+      ) : certificates.length === 0 ? (
+        <div className="rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-8 text-center text-sm text-[#7A7290]">
+          No certificates have been issued to your wallet yet.
+        </div>
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-2">
+          {certificates.map((certificate) => (
+            <CredentialCard
+              key={certificate.certificateId}
+              title={certificate.certificateTitle}
+              issuer={certificate.issuedBy}
+              issuedDate={formatIssuedDate(certificate.issuedAt)}
+              refId={certificate.certificateId}
+              status={certificate.status}
+              icon={<ShieldIcon />}
+              studentName={profile ? `${profile.firstName} ${profile.lastName}` : undefined}
+              cid={certificate.cid}
+              hash={certificate.hash}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-2">
-        <CredentialCard
-          title="Bachelor of Computer Science"
-          issuer="Tech University"
-          issuedDate="2024-03-15"
-          refId="#001"
-          status="Active"
-          icon={<ShieldIcon />}
-        />
         <ExternalCredentialsCard />
       </div>
     </section>
   );
+}
+
+function formatIssuedDate(issuedAt: string | null): string {
+  if (!issuedAt) return 'Not available';
+
+  const date = new Date(issuedAt);
+  return Number.isNaN(date.getTime()) ? issuedAt : date.toLocaleDateString();
 }

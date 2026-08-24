@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { apiClient } from '@/src/apiHelper/api';
 
 type Student = {
@@ -21,6 +22,7 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
   const [loading, setLoading] = useState(true);
   const [certificatesLoading, setCertificatesLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewMimeType, setPreviewMimeType] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
 
@@ -65,7 +67,11 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
       
       const blob = await apiClient.previewFile(certificate.cid, certificate.hash);
       const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
+      setPreviewUrl((currentUrl) => {
+        if (currentUrl) URL.revokeObjectURL(currentUrl);
+        return url;
+      });
+      setPreviewMimeType(blob.type);
     } catch (error) {
       console.error('Failed to preview certificate:', error);
       setPreviewError('Failed to load certificate preview');
@@ -79,6 +85,7 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
       URL.revokeObjectURL(previewUrl);
     }
     setPreviewUrl(null);
+    setPreviewMimeType(null);
     setPreviewError(null);
   };
 
@@ -189,7 +196,7 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
 
         {previewUrl && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4">
-            <div className="w-full max-w-4xl rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-[0_30px_60px_rgba(30,14,66,0.35)]">
+            <div className="flex h-[90vh] w-full max-w-7xl flex-col rounded-[20px] border border-[#E4DEF2] bg-[#FAF9FC] p-6 shadow-[0_30px_60px_rgba(30,14,66,0.35)]">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-[#1D1330] font-[family-name:var(--font-display)]">Certificate Preview</h3>
                 <button
@@ -207,8 +214,14 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
                   {previewError}
                 </div>
               ) : (
-                <div className="max-h-[70vh] overflow-auto rounded-[10px] border border-[#E4DEF2] bg-white">
-                  <iframe src={previewUrl} className="h-[70vh] w-full" title="Certificate Preview" />
+                <div className="min-h-0 flex-1 overflow-hidden rounded-[10px] border border-[#E4DEF2] bg-white">
+                  {previewMimeType?.startsWith('image/') ? (
+                    <div className="relative h-full w-full">
+                      <Image src={previewUrl} alt="Certificate Preview" fill unoptimized className="object-contain" />
+                    </div>
+                  ) : (
+                    <iframe src={`${previewUrl}#view=FitH`} className="h-full w-full" title="Certificate Preview" />
+                  )}
                 </div>
               )}
             </div>

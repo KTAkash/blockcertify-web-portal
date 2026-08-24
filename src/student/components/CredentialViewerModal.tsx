@@ -1,9 +1,12 @@
 "use client";
 
+import Image from 'next/image';
 
 type CredentialViewerModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  previewUrl: string | null;
+  previewMimeType: string | null;
   credential: {
     title: string;
     issuer: string;
@@ -44,14 +47,14 @@ function CloseIcon() {
   );
 }
 
-export default function CredentialViewerModal({ isOpen, onClose, credential }: CredentialViewerModalProps) {
+export default function CredentialViewerModal({ isOpen, onClose, previewUrl, previewMimeType, credential }: CredentialViewerModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="flex h-full max-h-175 w-full max-w-5xl overflow-hidden rounded-3xl shadow-2xl">
+      <div className="flex h-[90vh] w-full max-w-7xl overflow-hidden rounded-3xl shadow-2xl">
         {/* Left Section - Dark Background */}
-        <div className="flex w-full flex-col justify-between bg-[#120B24] p-8 lg:w-2/5">
+        <div className="flex w-full flex-col justify-between bg-[#120B24] p-8 lg:w-1/4">
           <div>
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#7C3AED]/20 text-[#9F75F2]">
               <ShieldCheckIcon />
@@ -74,7 +77,7 @@ export default function CredentialViewerModal({ isOpen, onClose, credential }: C
         </div>
 
         {/* Right Section - White Background */}
-        <div className="flex w-full flex-col bg-[#FAF9FC] lg:w-3/5">
+        <div className="flex min-w-0 flex-1 flex-col bg-[#FAF9FC]">
           {/* Purple Header Bar */}
           <div className="flex items-center gap-3 bg-[#5B21B6] px-8 py-5">
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 text-white">
@@ -86,57 +89,21 @@ export default function CredentialViewerModal({ isOpen, onClose, credential }: C
             </div>
           </div>
 
-          {/* Certificate Content */}
-          <div className="flex-1 overflow-y-auto p-8">
-            <div className="space-y-8">
-              <div className="text-center">
-                <div className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-                  This is to certify that
+          {/* Certificate Preview */}
+          <div className="min-h-0 flex-1 p-4">
+            {previewUrl ? (
+              previewMimeType?.startsWith('image/') ? (
+                <div className="relative h-full w-full overflow-hidden rounded-xl border border-[#E4DEF2] bg-white">
+                  <Image src={previewUrl} alt={`${credential.title} preview`} fill unoptimized className="object-contain" />
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight text-[#1D1330] font-[family-name:var(--font-display)]">
-                  {credential.studentName}
-                </h2>
+              ) : (
+                <iframe src={`${previewUrl}#view=FitH`} className="h-full w-full rounded-xl border border-[#E4DEF2] bg-white" title={`${credential.title} preview`} />
+              )
+            ) : (
+              <div className="flex h-full items-center justify-center rounded-xl border border-[#E4DEF2] bg-white p-6 text-center text-sm text-[#7A7290]">
+                Certificate preview is unavailable.
               </div>
-
-              <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-6">
-                <div className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-                  Degree Awarded
-                </div>
-                <div className="text-xl font-bold text-[#1D1330] font-[family-name:var(--font-display)]">{credential.title}</div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-                    Issuing Institution
-                  </div>
-                  <div className="font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{credential.issuer}</div>
-                </div>
-                <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-                    Date of Issue
-                  </div>
-                  <div className="font-medium text-[#1D1330] font-[family-name:var(--font-display)]">{credential.issuedDate}</div>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-                  Reference ID
-                </div>
-                <div className="font-mono text-sm font-medium text-[#1D1330]">{credential.refId}</div>
-              </div>
-
-              <div className="rounded-2xl border border-[#E4DEF2] bg-[#E4DEF2] p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#7A7290] font-[family-name:var(--font-display)]">
-                  Blockchain Verification
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                  <span className="text-sm font-medium text-[#1D1330] font-[family-name:var(--font-display)]">Verified on Hyperledger Fabric</span>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

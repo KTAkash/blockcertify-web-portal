@@ -17,7 +17,8 @@ export async function GET(
       }
     });
 
-    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'}/api/files/${cid}/preview`;
+    const previewParams = hash ? `?hash=${encodeURIComponent(hash)}` : '';
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8060'}/api/files/${cid}/preview${previewParams}`;
 
     const backendResponse = await fetch(backendUrl, {
       method: 'GET',
