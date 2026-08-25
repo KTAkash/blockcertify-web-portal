@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Header from '@/src/components/Header/index';
 import NavBar from '@/src/components/NavBar/index';
-import WalletOverview from '@/src/student/components/WalletOverview';
+import VerifierOverview from '@/src/student/components/VerifierOverview';
 
 const portalNavMap = {
   student: {
@@ -15,14 +15,14 @@ const portalNavMap = {
   },
 };
 
-export default function StudentPage() {
+export default function StudentVerifierPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
   
   const getActiveTitle = () => {
     const items = portalNavMap.student.items;
     const activeItem = items.find(item => item.href === pathname);
-    return activeItem ? activeItem.label : 'Overview';
+    return activeItem ? activeItem.label : 'Verifier';
   };
 
   return (
@@ -44,7 +44,7 @@ export default function StudentPage() {
           />
 
           <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-            <WalletOverview />
+            <VerifierOverview />
           </div>
         </div>
       </div>

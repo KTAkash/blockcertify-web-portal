@@ -73,6 +73,7 @@ export default function DegreeTitleDropdown({ value, onChange, placeholder = 'Se
             filteredTitles.map((title) => (
               <div
                 key={title}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(title)}
                 className="cursor-pointer px-5 py-3 text-sm text-[#1D1330] hover:bg-[#E4DEF2] font-[family-name:var(--font-body)]"
               >

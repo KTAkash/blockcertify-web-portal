@@ -4,33 +4,36 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Header from '@/src/components/Header/index';
 import NavBar from '@/src/components/NavBar/index';
-import WalletOverview from '@/src/student/components/WalletOverview';
+import StudentCertificatesList from '@/src/super-admin/components/StudentCertificatesList';
 
 const portalNavMap = {
-  student: {
+  'super-admin': {
     items: [
-      { label: 'My Wallet', href: '/student' },
-      { label: 'Verifier', href: '/student/verifier' },
+      { label: 'Network Overview', href: '/super-admin/network-overview' },
+      { label: 'Consortium Registry', href: '/super-admin/consortium' },
+      { label: 'Geo-Distributed Nodes', href: '/super-admin/nodes' },
+      { label: 'Student Certificates', href: '/super-admin/student-certificates' },
+      { label: 'Certificate Preview', href: '/super-admin/certificate-preview' },
     ],
   },
 };
 
-export default function StudentPage() {
+export default function StudentCertificatesPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
   
   const getActiveTitle = () => {
-    const items = portalNavMap.student.items;
+    const items = portalNavMap['super-admin'].items;
     const activeItem = items.find(item => item.href === pathname);
-    return activeItem ? activeItem.label : 'Overview';
+    return activeItem ? activeItem.label : 'Student Certificates';
   };
 
   return (
     <main className="min-h-screen bg-[#F5F3FF] text-foreground">
       <div className={`grid min-h-screen grid-cols-1 ${isSidebarOpen ? 'lg:grid-cols-[288px_1fr]' : 'lg:grid-cols-[80px_1fr]'}`}>
         <NavBar 
-          portal="student" 
-          role="Student" 
+          portal="super-admin" 
+          role="Super Admin" 
           isOpen={isSidebarOpen} 
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
         />
@@ -38,13 +41,13 @@ export default function StudentPage() {
         <div className="flex min-w-0 flex-col">
           <Header 
             title={getActiveTitle()} 
-            subtitle="Student Portal" 
+            subtitle="Super Admin Portal" 
             statusLabel="Hyperledger Fabric Mainnet"
             onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           />
 
           <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-            <WalletOverview />
+            <StudentCertificatesList />
           </div>
         </div>
       </div>

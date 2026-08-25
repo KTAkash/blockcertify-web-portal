@@ -1,5 +1,5 @@
 import { API_CONFIG } from '../config/config';
-import { LoginRequest, LoginResponse, AuthSession, University, RegisterUniversityRequest, StudentProfile, StudentSignupRequest, StudentCertificatesResponse } from '../interfaces/auth';
+import { LoginRequest, LoginResponse, AuthSession, University, RegisterUniversityRequest, StudentProfile, StudentSignupRequest, StudentCertificatesResponse, StudentCertificateStatus } from '../interfaces/auth';
 
 const TOKEN_KEY = 'blockcertify-token';
 
@@ -262,7 +262,7 @@ export const apiClient = {
     return text;
   },
 
-  async previewFile(cid: string, hash: string): Promise<Blob> {
+  async previewFile(cid: string, hash?: string): Promise<Blob> {
     const session = authStorage.getSession();
     const headers = new Headers();
 
@@ -270,7 +270,8 @@ export const apiClient = {
       headers.set('Authorization', `Bearer ${session.token}`);
     }
 
-    const response = await fetch(`/api/files/${cid}/preview?hash=${hash}`, {
+    const previewUrl = `/api/files/${encodeURIComponent(cid)}/preview${hash ? `?hash=${encodeURIComponent(hash)}` : ''}`;
+    const response = await fetch(previewUrl, {
       method: 'GET',
       headers,
     });
@@ -621,6 +622,50 @@ export const apiClient = {
         // ignore
       }
       throw new Error(errorMessage);
+    }
+  },
+
+  async getStudentCertificateStatus(): Promise<StudentCertificateStatus[]> {
+    const session = authStorage.getSession();
+    const headers = new Headers();
+
+    if (session) {
+      headers.set('Authorization', `Bearer ${session.token}`);
+    }
+
+    headers.set('Content-Type', 'application/json');
+
+    try {
+      const response = await fetch('/api/students/certificate-status', {
+        method: 'GET',
+        headers,
+      });
+
+      if (!response.ok) {
+        let errorMessage = `Failed to fetch student certificate status (${response.status})`;
+        try {
+          const text = await response.text();
+          if (text) {
+            try {
+              const errorData = JSON.parse(text);
+              errorMessage = errorData.message || errorData.error || errorMessage;
+            } catch {
+              errorMessage = `${errorMessage}: ${text}`;
+            }
+          }
+          console.error('API Error:', response.status, errorMessage);
+        } catch (parseError) {
+          console.error('Failed to parse error response:', parseError);
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      console.log('Student certificate status data:', data);
+      return data;
+    } catch (error) {
+      console.error('Error in getStudentCertificateStatus:', error);
+      throw error;
     }
   },
 

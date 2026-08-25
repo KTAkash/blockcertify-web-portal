@@ -71,3 +71,16 @@ export interface StudentCertificatesResponse {
   indexNo: string;
   certificates: StudentCertificate[];
 }
+
+export interface StudentCertificateStatus {
+  id: string;
+  name: string;
+  email: string;
+  indexNo: string;
+  totalCertificates: number;
+  issuedCount: number;
+  validCount: number;
+  revokedCount: number;
+  expiredCount: number;
+  hasIssuedCertificate: boolean;
+}

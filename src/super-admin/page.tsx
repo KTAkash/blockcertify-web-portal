@@ -12,6 +12,8 @@ const portalNavMap = {
       { label: 'Network Overview', href: '/super-admin/network-overview' },
       { label: 'Consortium Registry', href: '/super-admin/consortium' },
       { label: 'Geo-Distributed Nodes', href: '/super-admin/nodes' },
+      { label: 'Student Certificates', href: '/super-admin/student-certificates' },
+      { label: 'Certificate Preview', href: '/super-admin/certificate-preview' },
     ],
   },
 };
@@ -31,6 +33,11 @@ const quickLinks = [
     title: 'Geo-Distributed Nodes',
     description: 'Inspect peer connectivity and node latency.',
     href: '/super-admin/nodes',
+  },
+  {
+    title: 'Student Certificates',
+    description: 'View all published certificates across the consortium.',
+    href: '/super-admin/student-certificates',
   },
 ];
 
@@ -76,7 +83,7 @@ export default function SuperAdminPage() {
               </p>
             </section>
 
-            <section className="grid gap-5 md:grid-cols-3">
+            <section className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {quickLinks.map((link) => (
                 <Link
                   key={link.href}

@@ -52,6 +52,17 @@ export default function StudentSearchDropdown({ value, onChange, placeholder = '
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (value) {
+      const match = students.find((s) => s.id === value);
+      if (match) {
+        setSelectedStudent(match);
+      }
+    } else {
+      setSelectedStudent(null);
+    }
+  }, [value, students]);
+
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.indexNo.toLowerCase().includes(searchTerm.toLowerCase())
@@ -91,6 +102,7 @@ export default function StudentSearchDropdown({ value, onChange, placeholder = '
             filteredStudents.map((student) => (
               <div
                 key={student.id}
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(student)}
                 className="cursor-pointer px-5 py-3 text-sm text-[#1D1330] hover:bg-[#E4DEF2] font-[family-name:var(--font-body)]"
               >

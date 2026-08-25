@@ -48,7 +48,8 @@ export default function QRShareModal({ isOpen, onClose, cid }: QRShareModalProps
 
     let isCurrent = true;
 
-    toDataURL(cid, { width: 200, margin: 1, errorCorrectionLevel: 'M' })
+    // A larger, higher-redundancy code remains readable when it is displayed on a phone.
+    toDataURL(cid, { width: 400, margin: 2, errorCorrectionLevel: 'H' })
       .then((url) => {
         if (isCurrent) setQrCodeUrl(url);
       })
@@ -122,9 +123,9 @@ export default function QRShareModal({ isOpen, onClose, cid }: QRShareModalProps
           {/* QR Code */}
           <div className="mb-6 rounded-2xl border-4 border-[#E4DEF2] bg-white p-4 text-[#1D1330]">
             {qrCodeUrl ? (
-              <Image src={qrCodeUrl} alt="QR code for this certificate CID" width={200} height={200} unoptimized />
+              <Image src={qrCodeUrl} alt="QR code for this certificate CID" width={320} height={320} unoptimized />
             ) : (
-              <div className="flex h-[200px] w-[200px] items-center justify-center text-sm text-[#7A7290]">
+              <div className="flex h-[320px] w-[320px] max-w-full items-center justify-center text-sm text-[#7A7290]">
                 {qrError ? 'Unable to generate QR code' : 'Generating QR code...'}
               </div>
             )}

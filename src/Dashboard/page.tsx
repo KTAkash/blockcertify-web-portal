@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { authStorage } from '@/src/apiHelper/api';
 
 // Mock data for dashboard roles
-const roles = [
+const allRoles = [
   {
     id: 'system-owner',
     title: 'SYSTEM OWNER',
@@ -12,6 +13,7 @@ const roles = [
     icon: '🛡️',
     route: '/system-owner',
     description: 'Manage consortium governance and university onboarding',
+    allowedRoles: ['SYSTEM_OWNER', 'system-owner'],
   },
   {
     id: 'admin',
@@ -20,6 +22,7 @@ const roles = [
     icon: '🏢',
     route: '/admin',
     description: 'Manage institutional authority and operations',
+    allowedRoles: ['ADMIN', 'UNIVERSITY', 'admin', 'university'],
   },
   {
     id: 'wallet',
@@ -28,6 +31,7 @@ const roles = [
     icon: '👛',
     route: '/student',
     description: 'Manage your self-sovereign credentials',
+    allowedRoles: ['STUDENT', 'student'],
   },
   {
     id: 'verifier',
@@ -36,11 +40,34 @@ const roles = [
     icon: '🔍',
     route: '/verifier',
     description: 'Verify and validate credentials',
+    allowedRoles: ['STUDENT', 'student', 'VERIFIER', 'verifier'],
   },
 ];
 
 export default function Dashboard() {
   const [hoveredRole, setHoveredRole] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [filteredRoles, setFilteredRoles] = useState(allRoles);
+
+  useEffect(() => {
+    // Get user role from session storage
+    const session = authStorage.getSession();
+    if (session && session.role) {
+      setUserRole(session.role);
+      
+      // Filter roles based on user's role
+      const normalizedUserRole = session.role.toLowerCase().replace('_', '-');
+      const filtered = allRoles.filter(role => 
+        role.allowedRoles.some(allowed => 
+          allowed.toLowerCase().replace('_', '-') === normalizedUserRole
+        )
+      );
+      setFilteredRoles(filtered);
+    } else {
+      // If no user is logged in, show all roles
+      setFilteredRoles(allRoles);
+    }
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#F5F3FF]">
@@ -57,8 +84,8 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {roles.map((role) => {
+        <div className={`grid gap-6 ${filteredRoles.length === 2 ? 'sm:grid-cols-2 lg:grid-cols-2 max-w-3xl mx-auto' : 'sm:grid-cols-2 lg:grid-cols-4'}`}>
+          {filteredRoles.map((role) => {
             const isHovered = hoveredRole === role.id;
 
             return (
