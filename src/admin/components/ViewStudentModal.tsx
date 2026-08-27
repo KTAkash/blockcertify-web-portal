@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { apiClient } from '@/src/apiHelper/api';
+import RevokeConfirmationModal from './RevokeConfirmationModal';
 
 type Student = {
   id: string;
@@ -25,6 +26,20 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
   const [previewMimeType, setPreviewMimeType] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [revokeModal, setRevokeModal] = useState<{
+    isOpen: boolean;
+    studentName: string;
+    certificateTitle: string;
+    certificateId: string;
+    currentStatus: string;
+  }>({
+    isOpen: false,
+    studentName: '',
+    certificateTitle: '',
+    certificateId: '',
+    currentStatus: '',
+  });
+  const [isRevoking, setIsRevoking] = useState(false);
 
   useEffect(() => {
     loadStudentData();
@@ -87,6 +102,44 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
     setPreviewUrl(null);
     setPreviewMimeType(null);
     setPreviewError(null);
+  };
+
+  const handleRevokeClick = (cert: any) => {
+    const currentStatus = cert.status || 'ISSUED';
+    setRevokeModal({
+      isOpen: true,
+      studentName: student?.name || '',
+      certificateTitle: cert.certificateTitle || cert.title,
+      certificateId: cert.certificateId || cert.id,
+      currentStatus: currentStatus,
+    });
+  };
+
+  const handleRevokeConfirm = async () => {
+    setIsRevoking(true);
+    try {
+      const newStatus = revokeModal.currentStatus === 'ISSUED' ? 'REVOKED' : 'ISSUED';
+      await apiClient.revokeCertificate(revokeModal.certificateId, newStatus);
+      
+      // Refresh the certificates
+      if (student) {
+        const studentCertificates = await apiClient.getCertificatesByStudentId(studentId);
+        setCertificates(studentCertificates);
+      }
+      
+      setRevokeModal({
+        isOpen: false,
+        studentName: '',
+        certificateTitle: '',
+        certificateId: '',
+        currentStatus: '',
+      });
+    } catch (error) {
+      console.error('Failed to update certificate status:', error);
+      alert('Failed to update certificate status. Please try again.');
+    } finally {
+      setIsRevoking(false);
+    }
   };
 
   return (
@@ -161,21 +214,38 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
                   {certificates.map((cert) => (
                     <div 
                       key={cert.id || cert.certificateId} 
-                      className="cursor-pointer rounded-[8px] border border-[#E4DEF2] bg-[#FAF9FC] p-4 transition-colors hover:border-[#7C3AED] hover:bg-[#F0EDFF]"
-                      onClick={() => handlePreviewCertificate(cert)}
+                      className="rounded-[8px] border border-[#E4DEF2] bg-[#FAF9FC] p-4 transition-colors hover:border-[#7C3AED] hover:bg-[#F0EDFF]"
                     >
                       <div className="flex items-start justify-between">
-                        <div>
+                        <div 
+                          className="cursor-pointer flex-1"
+                          onClick={() => handlePreviewCertificate(cert)}
+                        >
                           <p className="font-semibold text-[#1D1330]">{cert.certificateTitle || cert.title}</p>
                           <p className="mt-1 text-xs text-[#7A7290]">ID: {cert.certificateId || cert.id}</p>
                         </div>
-                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                          cert.status === 'ISSUED' 
-                            ? 'bg-emerald-100 text-emerald-700' 
-                            : 'bg-amber-100 text-amber-700'
-                        }`}>
-                          {cert.status}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            cert.status === 'ISSUED' 
+                              ? 'bg-emerald-100 text-emerald-700' 
+                              : 'bg-rose-100 text-rose-700'
+                          }`}>
+                            {cert.status}
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRevokeClick(cert);
+                            }}
+                            className={`rounded-[8px] px-3 py-1.5 text-xs font-semibold text-white transition-colors ${
+                              cert.status === 'ISSUED'
+                                ? 'bg-rose-600 hover:bg-rose-700'
+                                : 'bg-[#5B21B6] hover:bg-[#4C1D95]'
+                            }`}
+                          >
+                            {cert.status === 'ISSUED' ? 'REVOKED' : 'ISSUED'}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -227,6 +297,16 @@ export default function ViewStudentModal({ studentId, onClose }: ViewStudentModa
             </div>
           </div>
         )}
+
+        <RevokeConfirmationModal
+          isOpen={revokeModal.isOpen}
+          studentName={revokeModal.studentName}
+          certificateTitle={revokeModal.certificateTitle}
+          currentStatus={revokeModal.currentStatus}
+          onCancel={() => setRevokeModal({ isOpen: false, studentName: '', certificateTitle: '', certificateId: '', currentStatus: '' })}
+          onConfirm={handleRevokeConfirm}
+          isLoading={isRevoking}
+        />
       </div>
     </div>
   );

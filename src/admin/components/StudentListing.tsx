@@ -49,6 +49,8 @@ export default function StudentListing() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
 
   useEffect(() => {
     loadStudents();
@@ -71,6 +73,37 @@ export default function StudentListing() {
     student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.indexNo.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredStudents.length / entriesPerPage);
+  const startIndex = (currentPage - 1) * entriesPerPage;
+  const endIndex = startIndex + entriesPerPage;
+  const paginatedStudents = filteredStudents.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleEntriesPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEntriesPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const handleAddStudent = async (newStudent: { id: string; name: string; email: string; indexNo: string }) => {
     try {
@@ -121,7 +154,20 @@ export default function StudentListing() {
       </div>
 
       <div className="px-6 py-4">
-        <div className="mb-4">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-[#7A7290]">Entries per page:</span>
+            <select
+              value={entriesPerPage}
+              onChange={handleEntriesPerPageChange}
+              className="rounded-[8px] border border-[#E4DEF2] bg-white px-3 py-2 text-sm text-[#1D1330] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
           <input
             type="text"
             placeholder="Search student name..."
@@ -139,54 +185,140 @@ export default function StudentListing() {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-            <thead>
-              <tr className="border-b border-[#E4DEF2] bg-[#E4DEF2]/70 text-left text-xs font-bold uppercase tracking-[0.14em] text-[#7A7290]">
-                <th className="px-6 py-4">ID</th>
-                <th className="px-6 py-4">Index No</th>
-                <th className="px-6 py-4">Student Name</th>
-                <th className="px-6 py-4">Email</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredStudents.map((student) => (
-                <tr key={student.id} className="border-b border-[#E4DEF2] last:border-b-0">
-                  <td className="px-6 py-5">
-                    <div className="font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">{student.id}</div>
-                  </td>
-                  <td className="px-6 py-5">
-                    <div className="font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">{student.indexNo}</div>
-                  </td>
-                  <td className="px-6 py-5 text-sm text-[#1D1330]">{student.name}</td>
-                  <td className="px-6 py-5 text-sm text-[#7A7290]">{student.email}</td>
-                  <td className="px-6 py-5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button 
-                        onClick={() => handleViewStudent(student.id)}
-                        className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]"
-                      >
-                        <ViewIcon />
-                      </button>
-                      <button 
-                        onClick={() => handleEditStudent(student)}
-                        className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]"
-                      >
-                        <EditIcon />
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteStudent(student.id)}
-                        className="rounded-full border border-rose-200 p-2 text-rose-600 transition-colors hover:bg-rose-50"
-                      >
-                        <DeleteIcon />
-                      </button>
-                    </div>
-                  </td>
+          <div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+              <thead>
+                <tr className="border-b border-[#E4DEF2] bg-[#E4DEF2]/70 text-left text-xs font-bold uppercase tracking-[0.14em] text-[#7A7290]">
+                  <th className="px-6 py-4">ID</th>
+                  <th className="px-6 py-4">Index No</th>
+                  <th className="px-6 py-4">Student Name</th>
+                  <th className="px-6 py-4">Email</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {paginatedStudents.map((student) => (
+                  <tr key={student.id} className="border-b border-[#E4DEF2] last:border-b-0">
+                    <td className="px-6 py-5">
+                      <div className="font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">{student.id}</div>
+                    </td>
+                    <td className="px-6 py-5">
+                      <div className="font-semibold text-[#1D1330] font-[family-name:var(--font-display)]">{student.indexNo}</div>
+                    </td>
+                    <td className="px-6 py-5 text-sm text-[#1D1330]">{student.name}</td>
+                    <td className="px-6 py-5 text-sm text-[#7A7290]">{student.email}</td>
+                    <td className="px-6 py-5 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button 
+                          onClick={() => handleViewStudent(student.id)}
+                          className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]"
+                        >
+                          <ViewIcon />
+                        </button>
+                        <button 
+                          onClick={() => handleEditStudent(student)}
+                          className="rounded-full border border-[#E4DEF2] p-2 text-[#7C3AED] transition-colors hover:bg-[#E4DEF2]"
+                        >
+                          <EditIcon />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteStudent(student.id)}
+                          className="rounded-full border border-rose-200 p-2 text-rose-600 transition-colors hover:bg-rose-50"
+                        >
+                          <DeleteIcon />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            </div>
+
+            {filteredStudents.length > 0 && (
+              <div className="mt-4 flex items-center justify-between border-t border-[#E4DEF2] pt-4">
+                <div className="text-sm text-[#7A7290]">
+                  Showing {startIndex + 1} to {Math.min(endIndex, filteredStudents.length)} of {filteredStudents.length} students
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E4DEF2] bg-white text-[#7C3AED] transition-colors hover:bg-[#E4DEF2] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {(() => {
+                      const pages = [];
+                      const maxVisible = 7;
+                      
+                      if (totalPages <= maxVisible) {
+                        // Show all pages if total is small
+                        for (let i = 1; i <= totalPages; i++) {
+                          pages.push(i);
+                        }
+                      } else {
+                        // Always show first page
+                        pages.push(1);
+                        
+                        if (currentPage > 3) {
+                          pages.push('...');
+                        }
+                        
+                        // Show pages around current page
+                        const start = Math.max(2, currentPage - 1);
+                        const end = Math.min(totalPages - 1, currentPage + 1);
+                        
+                        for (let i = start; i <= end; i++) {
+                          pages.push(i);
+                        }
+                        
+                        if (currentPage < totalPages - 2) {
+                          pages.push('...');
+                        }
+                        
+                        // Always show last page
+                        pages.push(totalPages);
+                      }
+                      
+                      return pages.map((page, index) => (
+                        page === '...' ? (
+                          <span key={`ellipsis-${index}`} className="px-2 text-[#7A7290]">...</span>
+                        ) : (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page as number)}
+                            className={`h-9 min-w-[36px] rounded-lg text-sm font-medium transition-colors ${
+                              currentPage === page
+                                ? 'bg-[#7C3AED] text-white'
+                                : 'border border-[#E4DEF2] bg-white text-[#7A7290] hover:bg-[#E4DEF2]'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        )
+                      ));
+                    })()}
+                  </div>
+
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#E4DEF2] bg-white text-[#7C3AED] transition-colors hover:bg-[#E4DEF2] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -625,6 +625,36 @@ export const apiClient = {
     }
   },
 
+  async revokeCertificate(certificateId: string, status: string = 'REVOKED'): Promise<any> {
+    const session = authStorage.getSession();
+    const headers = new Headers();
+
+    if (session) {
+      headers.set('Authorization', `Bearer ${session.token}`);
+    }
+
+    headers.set('Content-Type', 'application/json');
+
+    const response = await fetch(`/api/certificates/blockchain/${certificateId}/status`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'Failed to update certificate status';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        // ignore
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  },
+
   async getStudentCertificateStatus(): Promise<StudentCertificateStatus[]> {
     const session = authStorage.getSession();
     const headers = new Headers();
